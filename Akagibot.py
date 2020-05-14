@@ -27,7 +27,7 @@ async def on_reaction_add(reaction, user):
         if str(reaction.emoji) == '🗡️':
             if len(reaction.message.embeds) >= 1:
                 if reaction.message.embeds[0].title == "원하는 만큼 클릭하세요":
-                    rand = random.randint(1, 30)
+                    rand = random.randint(1, 20)
                     print(rand)
                     if rand == 1:
                         await reaction.message.edit(content=user.mention, allowed_mention="true")
