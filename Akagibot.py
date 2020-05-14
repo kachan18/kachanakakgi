@@ -34,7 +34,7 @@ async def on_reaction_add(reaction, user):
                         embedtong = discord.Embed(title="안타깝게도 알바코어가 힘차게 발사되었습니다.",
                                                   description="당첨자 : %s \n다시 시작하기 : ▶️" % user.name,
                                                   color=0xf15f5f)
-                        embedtong.set_thumbnail(
+                        embedtong.set_image(
                             url="https://images2.imgbox.com/75/14/Z0xw71mT_o.png")
                         await reaction.message.edit(embed=embedtong)
                         await reaction.message.clear_reactions()
@@ -69,7 +69,7 @@ async def on_reaction_add(reaction, user):
                     embedtong = discord.Embed(title="게임이 중단되어 알바코어가 안도합니다.",
                                               description="중지자 : %s \n다시 시작하기 : ▶️" % user.name,
                                               color=0xf15f5f)
-                    embedtong.set_thumbnail(
+                    embedtong.set_image(
                         url="https://images2.imgbox.com/a5/cd/nXI2XWKF_o.png")
                     await reaction.message.edit(embed=embedtong)
                     await reaction.message.clear_reactions()
