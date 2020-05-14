@@ -24,12 +24,12 @@ async def on_message(message):
     def asking(m):
         return m.channel == channel and m.author == m.author
 
-    id = message.author.id
     channel = message.channel
     # print("By %s\nChannel : %s\nLine :\n%s"%(message.author,message.channel,message.content))
 
     if message.author.bot:  # 봇은 무시한다!
         return None
+    # and str(channel) == "아카기봇채널"
     if message.content.startswith("!아카기"):
         cmdline = message.content.split(' ')
 
@@ -42,9 +42,9 @@ async def on_message(message):
             else:
                 await channel.send("후후후...지휘관님을 유혹하는 눈엣가시들이 꽤나 많네요... 일단 「청소」를...\n어머, 아카기를 부르셨나요? 네? 별 일 아니랍니다...우후후")
 
-        elif (len(cmdline) >= 2):
+        elif len(cmdline) >= 2:
 
-            if (cmdline[1] == "도움말"):
+            if cmdline[1] == "도움말":
                 if len(cmdline) == 3 and cmdline[2] == "2":
                     embedhelp = discord.Embed(title="도움말을 찾으시나요, 지휘관님?", description="이 아카기가 전.부. 알려드리겠습니다.",
                                               color=0xf15f5f)
@@ -70,17 +70,19 @@ async def on_message(message):
                     await channel.send(embed=embedhelp)
 
             elif (cmdline[1] == "정보"):
-                embed = discord.Embed(title="아카기봇 v0.1",
-                                      description="아카기봇 프로토타입\n프로토타입이기에 레이나 지휘관님이 실행시키고 계시지 않다면 잠들어 있답니다.\n아직 부족하지만 지휘관님과 함께라면 더욱 진화해 보이겠사와요.",
+                embed = discord.Embed(title="아카기봇 v0.2",
+                                      description="아카기봇\n24시간 가동 체제로 변경!\n아직 부족하지만 지휘관님과 함께라면 더욱 진화해 보이겠사와요.",
                                       color=0xf15f5f)
                 embed.set_image(
                     url="https://images2.imgbox.com/a5/cd/nXI2XWKF_o.png")
+                embed.add_field(name="```제작자```", value="Admiral. 레이나", inline=False)
                 await channel.send(embed=embed)
 
-            elif (cmdline[1] == "드랍"):
+            elif cmdline[1] == "드랍":
                 file = openpyxl.load_workbook("드랍.xlsx")
                 drop = file.active
-                if (len(cmdline) >= 3):
+                shipexist = 0
+                if len(cmdline) >= 3:
                     if random.randint(0, 100) <= 10 and cmdline[2] != "아카기":
                         await channel.send(
                             "```md\n[지휘관님?][지금 다른 아이에 대해 물어보셨죠? 아카기가 있으시면서, 어째서 다른 아이에 대해 물어보시는거죠? 유혹 당하셨나요? 그럼 그딴 녀석, 제가...]\n```")
@@ -91,12 +93,12 @@ async def on_message(message):
                                 break
                             if cmdline[2] == drop["A" + str(i)].value:
                                 shipexist = 1
-                                embed = discord.Embed(title="%s 드랍" % (drop["B" + str(i)].value),
-                                                      description="%s" % (drop["C" + str(i)].value),
+                                embed = discord.Embed(title="%s 드랍" % drop["B" + str(i)].value,
+                                                      description="%s" % drop["C" + str(i)].value,
                                                       color=0xf15f5f)
                                 if drop["D" + str(i)].value != "-":
                                     embed.set_thumbnail(
-                                        url="%s" % (drop["D" + str(i)].value))
+                                        url="%s" % drop["D" + str(i)].value)
                                 await channel.send(embed=embed)
                                 break
                         if shipexist == 0:
@@ -107,46 +109,46 @@ async def on_message(message):
             elif cmdline[1] == "함선":
                 file = openpyxl.load_workbook("함선.xlsx")
                 sheet = file.active
-
+                shipexist = 0
                 if len(cmdline) >= 3:
                     if random.randint(0, 100) <= 10 and cmdline[2] != "아카기" and cmdline[2] != "카가" and cmdline[2] != "아마기":
-                        await channel.send("```md\n[지휘관님?][지금 다른 아이에 대해 물어보셨죠? 아카기가 있으시면서, 어째서 다른 아이에 대해 물어보시는거죠? 유혹 당하셨나요? 그럼 그딴 녀석, 제가...]\n```")
+                        await channel.send(
+                            "```md\n[지휘관님?][지금 다른 아이에 대해 물어보셨죠? 아카기가 있으시면서, 어째서 다른 아이에 대해 물어보시는거죠? 유혹 당하셨나요? 그럼 그딴 녀석, 제가...]\n```")
                     else:
                         for i in range(2, 500):
                             shipexist = 0
                             if sheet["A" + str(i)].value == "-":
                                 break
-                            if cmdline[2] == sheet["O" + str(i)].value != "-" or cmdline[2] == sheet[
-                                "P" + str(i)].value != "-":
+                            if cmdline[2] == sheet["O" + str(i)].value != "-" or cmdline[2] == sheet["P" + str(i)].value != "-":
                                 shipexist = 1
-                                embed = discord.Embed(title="%s" % (sheet["B" + str(i)].value),
-                                                      description="%s" % (sheet["C" + str(i)].value),
+                                embed = discord.Embed(title="%s" % sheet["B" + str(i)].value,
+                                                      description="%s" % sheet["C" + str(i)].value,
                                                       color=0xf15f5f)
                                 if sheet["D" + str(i)].value != "-":
                                     embed.set_image(
-                                        url="%s" % (sheet["D" + str(i)].value))
-                                embed.add_field(name="```함종```", value="%s" % (sheet["E" + str(i)].value), inline=False)
-                                embed.add_field(name="```등급```", value="%s" % (sheet["F" + str(i)].value), inline=False)
-                                embed.add_field(name="```성우```", value="%s" % (sheet["G" + str(i)].value), inline=False)
+                                        url="%s" % sheet["D" + str(i)].value)
+                                embed.add_field(name="```함종```", value="%s" % sheet["E" + str(i)].value, inline=False)
+                                embed.add_field(name="```등급```", value="%s" % sheet["F" + str(i)].value, inline=False)
+                                embed.add_field(name="```성우```", value="%s" % sheet["G" + str(i)].value, inline=False)
                                 if sheet["L" + str(i)].value != "-":
                                     embed.add_field(name="```특이 사항```",
-                                                    value="%s" % (sheet["L" + str(i)].value),
+                                                    value="%s" % sheet["L" + str(i)].value,
                                                     inline=False)
                                 if sheet["H" + str(i)].value != "-":
                                     embed.add_field(name="```스킬 1```",
-                                                    value="%s" % (sheet["H" + str(i)].value),
+                                                    value="%s" % sheet["H" + str(i)].value,
                                                     inline=False)
                                 if sheet["I" + str(i)].value != "-":
                                     embed.add_field(name="```스킬 2```",
-                                                    value="%s" % (sheet["I" + str(i)].value),
+                                                    value="%s" % sheet["I" + str(i)].value,
                                                     inline=False)
                                 if sheet["J" + str(i)].value != "-":
                                     embed.add_field(name="```스킬 3```",
-                                                    value="%s" % (sheet["J" + str(i)].value),
+                                                    value="%s" % sheet["J" + str(i)].value,
                                                     inline=False)
                                 if sheet["K" + str(i)].value != "-":
                                     embed.add_field(name="```스킬 4```",
-                                                    value="%s" % (sheet["K" + str(i)].value),
+                                                    value="%s" % sheet["K" + str(i)].value,
                                                     inline=False)
                                 await channel.send(embed=embed)
                                 break
@@ -156,37 +158,37 @@ async def on_message(message):
                                     if sheet["N" + str(i)].value == "-" or (
                                             len(cmdline) > 4 and cmdline[4] == sheet["N" + str(i)].value):
                                         shipexist = 1
-                                        embed = discord.Embed(title="%s" % (sheet["B" + str(i)].value),
-                                                              description="%s" % (sheet["C" + str(i)].value),
+                                        embed = discord.Embed(title="%s" % sheet["B" + str(i)].value,
+                                                              description="%s" % sheet["C" + str(i)].value,
                                                               color=0xf15f5f)
                                         if sheet["D" + str(i)].value != "-":
                                             embed.set_image(
-                                                url="%s" % (sheet["D" + str(i)].value))
-                                        embed.add_field(name="```함종```", value="%s" % (sheet["E" + str(i)].value),
+                                                url="%s" % sheet["D" + str(i)].value)
+                                        embed.add_field(name="```함종```", value="%s" % sheet["E" + str(i)].value,
                                                         inline=False)
-                                        embed.add_field(name="```등급```", value="%s" % (sheet["F" + str(i)].value),
+                                        embed.add_field(name="```등급```", value="%s" % sheet["F" + str(i)].value,
                                                         inline=False)
-                                        embed.add_field(name="```성우```", value="%s" % (sheet["G" + str(i)].value),
+                                        embed.add_field(name="```성우```", value="%s" % sheet["G" + str(i)].value,
                                                         inline=False)
                                         if sheet["L" + str(i)].value != "-":
-                                            embed.add_field(name="```한정 드랍```",
-                                                            value="%s" % (sheet["L" + str(i)].value),
+                                            embed.add_field(name="```특이 사항```",
+                                                            value="%s" % sheet["L" + str(i)].value,
                                                             inline=False)
                                         if sheet["H" + str(i)].value != "-":
                                             embed.add_field(name="```스킬 1```",
-                                                            value="%s" % (sheet["H" + str(i)].value),
+                                                            value="%s" % sheet["H" + str(i)].value,
                                                             inline=False)
                                         if sheet["I" + str(i)].value != "-":
                                             embed.add_field(name="```스킬 2```",
-                                                            value="%s" % (sheet["I" + str(i)].value),
+                                                            value="%s" % sheet["I" + str(i)].value,
                                                             inline=False)
                                         if sheet["J" + str(i)].value != "-":
                                             embed.add_field(name="```스킬 3```",
-                                                            value="%s" % (sheet["J" + str(i)].value),
+                                                            value="%s" % sheet["J" + str(i)].value,
                                                             inline=False)
                                         if sheet["K" + str(i)].value != "-":
                                             embed.add_field(name="```스킬 4```",
-                                                            value="%s" % (sheet["K" + str(i)].value),
+                                                            value="%s" % sheet["K" + str(i)].value,
                                                             inline=False)
                                         await channel.send(embed=embed)
                                         break
@@ -198,25 +200,23 @@ async def on_message(message):
             elif cmdline[1] == "하드정보":
                 file = openpyxl.load_workbook("하드정보.xlsx")
                 hard = file.active
-
+                hardexist = 0
                 if len(cmdline) >= 3:
-                    hardexist = 0
                     for i in range(2, 30):
                         hardexist = 0
                         if hard["A" + str(i)].value == "-":
                             break
                         if cmdline[2] == hard["A" + str(i)].value:
                             hardexist = 1
-                            embed = discord.Embed(title="어려움 %s" % (hard["A" + str(i)].value),
-                                                  description="%s" % (hard["B" + str(i)].value),
+                            embed = discord.Embed(title="어려움 %s" % hard["A" + str(i)].value,
+                                                  description="%s" % hard["B" + str(i)].value,
                                                   color=0xf15f5f)
-                            embed.add_field(name="```1함대 조건```", value="%s" % (hard["C" + str(i)].value), inline=False)
-                            embed.add_field(name="```2함대 조건```", value="%s" % (hard["D" + str(i)].value), inline=False)
+                            embed.add_field(name="```1함대 조건```", value="%s" % hard["C" + str(i)].value, inline=False)
+                            embed.add_field(name="```2함대 조건```", value="%s" % hard["D" + str(i)].value, inline=False)
                             if hard["E" + str(i)].value != "-":
                                 if hard["F" + str(i)].value != "-":
                                     if hard["G" + str(i)].value != "-":
-                                        embed.add_field(name="```출격 조건```", value="%s / %s / %s" % (
-                                        hard["E" + str(i)].value, hard["F" + str(i)].value, hard["G" + str(i)].value),
+                                        embed.add_field(name="```출격 조건```", value="%s / %s / %s" % (hard["E" + str(i)].value, hard["F" + str(i)].value, hard["G" + str(i)].value),
                                                         inline=False)
                             embed.add_field(name="```적 정보```",
                                             value="정보 없음",
@@ -274,7 +274,7 @@ async def on_message(message):
                             remember["A" + str(remnum)] = "-"
                             file.save("기억리스트.xlsx")
                         else:
-                            embed = discord.Embed(title="\"%s\"라고 하시면 \n뭐라고 답할까요?" % (msg.content),
+                            embed = discord.Embed(title="\"%s\"라고 하시면 \n뭐라고 답할까요?" % msg.content,
                                                   description="10초 이내로 답해주세요. 그냥 채팅으로 치시면 됩니다.",
                                                   color=0xf15f5f)
                             embed.set_thumbnail(
@@ -299,9 +299,9 @@ async def on_message(message):
                                                       color=0xf15f5f)
                                 embed.set_thumbnail(
                                     url="https://images2.imgbox.com/a5/cd/nXI2XWKF_o.png")
-                                embed.add_field(name="```질문```", value="%s" % (remember["A" + str(remnum)].value),
+                                embed.add_field(name="```질문```", value="%s" % remember["A" + str(remnum)].value,
                                                 inline=False)
-                                embed.add_field(name="```대답```", value="%s" % (remember["B" + str(remnum)].value),
+                                embed.add_field(name="```대답```", value="%s" % remember["B" + str(remnum)].value,
                                                 inline=False)
                                 await channel.send(embed=embed)
                     else:
@@ -324,8 +324,8 @@ async def on_message(message):
                 for i in range(1, 101):
                     if remember["A" + str(i)].value == ask:
                         findanswer = 1
-                        embed = discord.Embed(title="%s" % (remember["B" + str(i)].value),
-                                              description="질문 : \"%s\"" % (ask),
+                        embed = discord.Embed(title="%s" % remember["B" + str(i)].value,
+                                              description="질문 : \"%s\"" % ask,
                                               color=0xf15f5f)
                         embed.set_thumbnail(
                             url="https://images2.imgbox.com/a5/cd/nXI2XWKF_o.png")
@@ -333,7 +333,7 @@ async def on_message(message):
                         break
                 if findanswer == 0:
                     embed = discord.Embed(title="뭐라고 답해야 할지 모르겠네요",
-                                          description="질문 : \"%s\"" % (ask),
+                                          description="질문 : \"%s\"" % ask,
                                           color=0xf15f5f)
                     embed.set_thumbnail(
                         url="https://images2.imgbox.com/a5/cd/nXI2XWKF_o.png")
@@ -347,8 +347,7 @@ async def on_message(message):
                                       color=0xf15f5f)
                 for i in range(1, 100):
                     if remember["A" + str(i)].value != "-":
-                        embed.add_field(name="```기억 %d```" % (i), value="질문 : \"%s\"\n대답 : \"%s\"" % (
-                        remember["A" + str(i)].value, remember["B" + str(i)].value), inline=False)
+                        embed.add_field(name="```기억 %d```" % i, value="질문 : \"%s\"\n대답 : \"%s\"" % (remember["A" + str(i)].value, remember["B" + str(i)].value), inline=False)
                         isEmpty = 0
                 if isEmpty == 1:
                     embed = discord.Embed(title="아카기의 기억 목록",
@@ -371,8 +370,7 @@ async def on_message(message):
                                       color=0xf15f5f)
                 for i in range(1, 100):
                     if remember["A" + str(i)].value != "-":
-                        embed.add_field(name="```기억 %d```" % (i), value="질문 : \"%s\"\n대답 : \"%s\"" % (
-                        remember["A" + str(i)].value, remember["B" + str(i)].value), inline=False)
+                        embed.add_field(name="```기억 %d```" % i, value="질문 : \"%s\"\n대답 : \"%s\"" % (remember["A" + str(i)].value, remember["B" + str(i)].value), inline=False)
                         isEmpty = 0
                 if isEmpty == 1:
                     embed = discord.Embed(title="아카기의 기억 목록",
@@ -419,7 +417,7 @@ async def on_message(message):
                                 url="https://images2.imgbox.com/a5/cd/nXI2XWKF_o.png")
                             await channel.send(embed=embed)
 
-            elif (cmdline[1] == "가위바위보"):
+            elif cmdline[1] == "가위바위보":
                 file = openpyxl.load_workbook("가위바위보쿨다운.xlsx")
                 sheet = file.active
                 for i in range(1, 51):
@@ -453,7 +451,7 @@ async def on_message(message):
                                 rcpname = "가위 바위 보".split(' ')
                                 await channel.send("```[ %s ]지휘관님은 [ %s ] 를 내셨네요.\n아카기는 무엇이냐면요,\n\n**%s 랍니다!**```" % (
                                 msg.author, msg.content, rcpname[rand]))
-                                if (msg.content == "가위"):
+                                if msg.content == "가위":
                                     if rand == 0:
                                         await channel.send("```어머, 비겼네요. 이렇게 마음이 맞는걸 보면 역시, 아카기와 지휘관님은 맺어질 운명이에요...```")
                                     elif rand == 1:
@@ -513,7 +511,7 @@ async def on_message(message):
                             rcpname = "가위 바위 보".split(' ')
                             await channel.send("```[ %s ]지휘관님은 [ %s ] 를 내셨네요.\n아카기는 무엇이냐면요,\n\n**%s 랍니다!**```" % (
                                 msg.author, msg.content, rcpname[rand]))
-                            if (msg.content == "가위"):
+                            if msg.content == "가위":
                                 if rand == 0:
                                     await channel.send("```어머, 비겼네요. 이렇게 마음이 맞는걸 보면 역시, 아카기와 지휘관님은 맺어질 운명이에요...```")
                                 elif rand == 1:
@@ -539,7 +537,7 @@ async def on_message(message):
                                     await channel.send("```어머, 비겼네요. 이렇게 마음이 맞는걸 보면 역시, 아카기와 지휘관님은 맺어질 운명이에요...```")
                         break
 
-            elif (cmdline[1] == "서약"):
+            elif cmdline[1] == "서약":
                 embed = discord.Embed(
                     title="아카기, 이날만을 기다렸어요.\n후후훗...... 앞으로는 누구든 간에 지휘관님과 아카기를 떨어뜨릴 수 없어.\n저의 모든 것이 지휘관님의 것, 지휘관님의 모든 것은 저의 것이에요..... 후훗, 후후훗, 우후후후후후훗......",
                     description="\n",
@@ -548,7 +546,7 @@ async def on_message(message):
                     url="https://mblogthumb-phinf.pstatic.net/MjAxODA1MjNfMTQy/MDAxNTI3MDYzOTUxMDgy.WjbntAVv-ZJ_M4-7l_F5yDWu56LpUMtZs-Fwfwcy5sUg.owTwDTBHq6KO-feCwYNLJNw_wPV7v1fvDWfoztzxiscg.JPEG.hcnhd/Screenshot_20180523-171244.jpg?type=w800")
                 await channel.send(embed=embed)
 
-            elif (cmdline[1] == "랜덤대사"):
+            elif cmdline[1] == "랜덤대사":
                 file = openpyxl.load_workbook("랜덤대사.xlsx")
                 sheet = file.active
 
@@ -557,11 +555,15 @@ async def on_message(message):
                                       color=0xf15f5f)
                 embed.set_thumbnail(
                     url="https://images2.imgbox.com/a5/cd/nXI2XWKF_o.png")
-                rand = random.randint(0, 24)
-                if rand == 0:
-                    embed.add_field(name="입수 시",
-                                    value="이제야 만났네요, 지휘관님. 헌데... 눈엣가시들이 꽤나 많네요... 일단 「청소」를 마친 뒤, 느긋하게 친목을 도모해 보아요. 후후...",
-                                    inline=False)
+                randlen = 1
+                for i in range(1, 100):
+                    if sheet["A" + str(i)].value != "-":
+                        randlen += 1
+                    else:
+                        break
+                rand = random.randint(1, randlen)
+                embed.add_field(name="%s" % sheet["A" + str(rand)].value, value="%s" % sheet["B" + str(rand)].value,
+                                inline=False)
                 await channel.send(embed=embed)
             else:
                 await channel.send("지휘관님이 무엇을 말하시려 했는지는 모르겠지만, 지휘관님은 아카기와 영원히 함께랍니다~♥")
