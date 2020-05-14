@@ -55,9 +55,9 @@ async def on_reaction_add(reaction, user):
                     embedtong = discord.Embed(title="원하는 만큼 클릭하세요",
                                               description="칼 꽂기 : :dagger: \n중지버튼 : :stop_button: \n 언제 걸릴지는 랜덤입니다.",
                                               color=0xf15f5f)
-                    embedtong.add_field(name="방금 누른 사람", value="@%s" % user.name, inline=False)
+                    embedtong.add_field(name="시작한 사람", value="@%s" % user.name, inline=False)
                     embedtong.set_image(
-                        url="https://images2.imgbox.com/e8/cb/DL8EsYZQ_o.png")
+                        url="https://images2.imgbox.com/3c/5c/Y5qAM09P_o.png")
                     await reaction.message.edit(embed=embedtong)
                     await reaction.message.clear_reactions()
                     await reaction.message.add_reaction('🗡️')
@@ -70,7 +70,7 @@ async def on_reaction_add(reaction, user):
                                               description="중지자 : %s \n다시 시작하기 : ▶️" % user.name,
                                               color=0xf15f5f)
                     embedtong.set_image(
-                        url="https://images2.imgbox.com/a5/cd/nXI2XWKF_o.png")
+                        url="https://images2.imgbox.com/e8/cb/DL8EsYZQ_o.png")
                     await reaction.message.edit(embed=embedtong)
                     await reaction.message.clear_reactions()
                     await reaction.message.add_reaction('▶️')
