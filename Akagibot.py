@@ -30,7 +30,7 @@ async def on_message(message):
 
     if message.author.bot:  # 봇은 무시한다!
         return None
-    if message.content.startswith("!아카기") and str(channel) == "아카기봇채널":
+    if message.content.startswith("!아카기"):
         cmdline = message.content.split(' ')
 
         if len(cmdline) == 1:
