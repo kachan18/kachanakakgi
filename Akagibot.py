@@ -20,15 +20,79 @@ async def on_ready():
 
 
 @client.event
+async def on_reaction_add(reaction, user):
+    channel = reaction.message.channel
+
+    if str(channel) == "통아저씨" and str(reaction.message.author.id) == str(client.user.id) != str(user.id):
+        if str(reaction.emoji) == '🗡️':
+            if len(reaction.message.embeds) >= 1:
+                if reaction.message.embeds[0].title == "원하는 만큼 클릭하세요":
+                    rand = random.randint(1, 30)
+                    print(rand)
+                    if rand == 1:
+                        await reaction.message.edit(content=user.mention, allowed_mention="true")
+                        embedtong = discord.Embed(title="안타깝게도 알바코어가 힘차게 발사되었습니다.",
+                                                  description="당첨자 : %s \n다시 시작하기 : ▶️" % user.name,
+                                                  color=0xf15f5f)
+                        embedtong.set_thumbnail(
+                            url="https://images2.imgbox.com/75/14/Z0xw71mT_o.png")
+                        await reaction.message.edit(embed=embedtong)
+                        await reaction.message.clear_reactions()
+                        await reaction.message.add_reaction('▶️')
+                    else:
+                        embedtong = discord.Embed(title="원하는 만큼 클릭하세요",
+                                                  description="칼 꽂기 : :dagger: \n중지버튼 : :stop_button: \n 언제 걸릴지는 랜덤입니다.",
+                                                  color=0xf15f5f)
+                        embedtong.add_field(name="방금 눌른 사람", value=user.mention, inline=False)
+                        embedtong.set_image(
+                            url="https://images2.imgbox.com/3c/5c/Y5qAM09P_o.png")
+                        await reaction.message.edit(embed=embedtong)
+                        await reaction.message.remove_reaction('🗡️', member=user)
+        if str(reaction.emoji) == '▶️':
+            if len(reaction.message.embeds) >= 1:
+                if reaction.message.embeds[0].title == "게임이 중단되어 알바코어가 안도합니다." or reaction.message.embeds[0].title == "안타깝게도 알바코어가 힘차게 발사되었습니다.":
+                    await reaction.message.edit(content="@%s" % user.name)
+                    embedtong = discord.Embed(title="원하는 만큼 클릭하세요",
+                                              description="칼 꽂기 : :dagger: \n중지버튼 : :stop_button: \n 언제 걸릴지는 랜덤입니다.",
+                                              color=0xf15f5f)
+                    embedtong.add_field(name="방금 누른 사람", value="@%s" % user.name, inline=False)
+                    embedtong.set_image(
+                        url="https://images2.imgbox.com/e8/cb/DL8EsYZQ_o.png")
+                    await reaction.message.edit(embed=embedtong)
+                    await reaction.message.clear_reactions()
+                    await reaction.message.add_reaction('🗡️')
+                    await reaction.message.add_reaction('⏹️')
+        if str(reaction.emoji) == '⏹️':
+            if len(reaction.message.embeds) >= 1:
+                if reaction.message.embeds[0].title == "원하는 만큼 클릭하세요":
+                    await reaction.message.edit(content=user.mention, allowed_mention="true")
+                    embedtong = discord.Embed(title="게임이 중단되어 알바코어가 안도합니다.",
+                                              description="중지자 : %s \n다시 시작하기 : ▶️" % user.name,
+                                              color=0xf15f5f)
+                    embedtong.set_thumbnail(
+                        url="https://images2.imgbox.com/a5/cd/nXI2XWKF_o.png")
+                    await reaction.message.edit(embed=embedtong)
+                    await reaction.message.clear_reactions()
+                    await reaction.message.add_reaction('▶️')
+
+
+@client.event
 async def on_message(message):
     def asking(m):
         return m.channel == channel and m.author == m.author
 
+    id = message.author.id
     channel = message.channel
-    # print("By %s\nChannel : %s\nLine :\n%s"%(message.author,message.channel,message.content))
 
-    if message.author.bot:  # 봇은 무시한다!
+    if message.author.bot:  # 봇은 기본적으로는 무시
+        channel = message.channel
+        if str(channel) == "통아저씨" and str(message.author.id) == str(client.user.id):
+            if len(message.embeds) >= 1:
+                if message.embeds[0].title == "원하는 만큼 클릭하세요":
+                    await message.add_reaction('🗡️')
+                    await message.add_reaction('⏹️')
         return None
+
     # and str(channel) == "아카기봇채널"
     if message.content.startswith("!아카기"):
         cmdline = message.content.split(' ')
@@ -60,8 +124,7 @@ async def on_message(message):
                     embedhelp.add_field(name="!아카기 정보", value="봇에 대한 정보를 열람합니다.", inline=False)
                     embedhelp.add_field(name="!아카기 도움말", value="도움말을 열람합니다.", inline=False)
                     embedhelp.add_field(name="!아카기 함선 (함선명)", value="함선에 대한 정보를 열람합니다.", inline=False)
-                    embedhelp.add_field(name="!아카기 드랍 (함선명)", value="함선의 드랍 위치를 열람합니다. 해역에서만 드랍되는 함선만 사용 가능합니다.",
-                                        inline=False)
+                    embedhelp.add_field(name="!아카기 드랍 (함선명)", value="함선의 드랍 위치를 열람합니다. 해역에서만 드랍되는 함선만 사용 가능합니다.", inline=False)
                     embedhelp.add_field(name="!아카기 하드정보 지역명(예:3-4)", value="어려움 해역의 평균레벨 등 조건을 확인합니다.", inline=False)
                     embedhelp.add_field(name="!아카기 기억하기", value="지휘관님, 아카기에게 뭘 가르치고 싶으신가요?", inline=False)
                     embedhelp.add_field(name="!아카기 잊기", value="지휘관님, 아카기가 뭘 잊어버리기를 바라시나요?", inline=False)
@@ -69,7 +132,7 @@ async def on_message(message):
                     embedhelp.add_field(name="!아카기 가위바위보", value="지휘관님, 아카기랑 가위바위보라도 해보시겠어요?", inline=False)
                     await channel.send(embed=embedhelp)
 
-            elif (cmdline[1] == "정보"):
+            elif cmdline[1] == "정보":
                 embed = discord.Embed(title="아카기봇 v0.2",
                                       description="아카기봇\n24시간 가동 체제로 변경!\n아직 부족하지만 지휘관님과 함께라면 더욱 진화해 보이겠사와요.",
                                       color=0xf15f5f)
@@ -81,14 +144,13 @@ async def on_message(message):
             elif cmdline[1] == "드랍":
                 file = openpyxl.load_workbook("드랍.xlsx")
                 drop = file.active
-                shipexist = 0
                 if len(cmdline) >= 3:
                     if random.randint(0, 100) <= 10 and cmdline[2] != "아카기":
                         await channel.send(
                             "```md\n[지휘관님?][지금 다른 아이에 대해 물어보셨죠? 아카기가 있으시면서, 어째서 다른 아이에 대해 물어보시는거죠? 유혹 당하셨나요? 그럼 그딴 녀석, 제가...]\n```")
                     else:
+                        shipexist = 0
                         for i in range(2, 1000):
-                            shipexist = 0
                             if drop["A" + str(i)].value == "-":
                                 break
                             if cmdline[2] == drop["A" + str(i)].value:
@@ -109,14 +171,14 @@ async def on_message(message):
             elif cmdline[1] == "함선":
                 file = openpyxl.load_workbook("함선.xlsx")
                 sheet = file.active
-                shipexist = 0
+
                 if len(cmdline) >= 3:
                     if random.randint(0, 100) <= 10 and cmdline[2] != "아카기" and cmdline[2] != "카가" and cmdline[2] != "아마기":
                         await channel.send(
                             "```md\n[지휘관님?][지금 다른 아이에 대해 물어보셨죠? 아카기가 있으시면서, 어째서 다른 아이에 대해 물어보시는거죠? 유혹 당하셨나요? 그럼 그딴 녀석, 제가...]\n```")
                     else:
+                        shipexist = 0
                         for i in range(2, 500):
-                            shipexist = 0
                             if sheet["A" + str(i)].value == "-":
                                 break
                             if cmdline[2] == sheet["O" + str(i)].value != "-" or cmdline[2] == sheet["P" + str(i)].value != "-":
@@ -153,10 +215,8 @@ async def on_message(message):
                                 await channel.send(embed=embed)
                                 break
                             elif cmdline[2] == sheet["A" + str(i)].value:
-                                if sheet["M" + str(i)].value == "-" or (
-                                        len(cmdline) > 3 and cmdline[3] == sheet["M" + str(i)].value):
-                                    if sheet["N" + str(i)].value == "-" or (
-                                            len(cmdline) > 4 and cmdline[4] == sheet["N" + str(i)].value):
+                                if sheet["M" + str(i)].value == "-" or (len(cmdline) > 3 and cmdline[3] == sheet["M" + str(i)].value):
+                                    if sheet["N" + str(i)].value == "-" or (len(cmdline) > 4 and cmdline[4] == sheet["N" + str(i)].value):
                                         shipexist = 1
                                         embed = discord.Embed(title="%s" % sheet["B" + str(i)].value,
                                                               description="%s" % sheet["C" + str(i)].value,
@@ -201,9 +261,9 @@ async def on_message(message):
                 file = openpyxl.load_workbook("하드정보.xlsx")
                 hard = file.active
                 hardexist = 0
+
                 if len(cmdline) >= 3:
                     for i in range(2, 30):
-                        hardexist = 0
                         if hard["A" + str(i)].value == "-":
                             break
                         if cmdline[2] == hard["A" + str(i)].value:
@@ -216,8 +276,7 @@ async def on_message(message):
                             if hard["E" + str(i)].value != "-":
                                 if hard["F" + str(i)].value != "-":
                                     if hard["G" + str(i)].value != "-":
-                                        embed.add_field(name="```출격 조건```", value="%s / %s / %s" % (hard["E" + str(i)].value, hard["F" + str(i)].value, hard["G" + str(i)].value),
-                                                        inline=False)
+                                        embed.add_field(name="```출격 조건```", value="%s / %s / %s" % (hard["E" + str(i)].value, hard["F" + str(i)].value, hard["G" + str(i)].value), inline=False)
                             embed.add_field(name="```적 정보```",
                                             value="정보 없음",
                                             inline=False)
@@ -341,15 +400,15 @@ async def on_message(message):
             elif cmdline[1] == "기억목록":
                 file = openpyxl.load_workbook("기억리스트.xlsx")
                 remember = file.active
-                isEmpty = 1
+                isempty = 1
                 embed = discord.Embed(title="아카기의 기억 목록",
                                       description="제 기억이 궁금하셨나요 지휘관님? 지휘관님을 위해서라면.",
                                       color=0xf15f5f)
                 for i in range(1, 100):
                     if remember["A" + str(i)].value != "-":
                         embed.add_field(name="```기억 %d```" % i, value="질문 : \"%s\"\n대답 : \"%s\"" % (remember["A" + str(i)].value, remember["B" + str(i)].value), inline=False)
-                        isEmpty = 0
-                if isEmpty == 1:
+                        isempty = 0
+                if isempty == 1:
                     embed = discord.Embed(title="아카기의 기억 목록",
                                           description="현재 기억하고 있는 내용이 없네요",
                                           color=0xf15f5f)
@@ -364,15 +423,15 @@ async def on_message(message):
             elif cmdline[1] == "잊기":
                 file = openpyxl.load_workbook("기억리스트.xlsx")
                 remember = file.active
-                isEmpty = 1
+                isempty = 1
                 embed = discord.Embed(title="아카기의 기억 목록",
                                       description="어떤 기억을 잊기를 원하시나요 지휘관님? 번호로 답해주세요.",
                                       color=0xf15f5f)
                 for i in range(1, 100):
                     if remember["A" + str(i)].value != "-":
                         embed.add_field(name="```기억 %d```" % i, value="질문 : \"%s\"\n대답 : \"%s\"" % (remember["A" + str(i)].value, remember["B" + str(i)].value), inline=False)
-                        isEmpty = 0
-                if isEmpty == 1:
+                        isempty = 0
+                if isempty == 1:
                     embed = discord.Embed(title="아카기의 기억 목록",
                                           description="현재 기억하고 있는 내용이 없네요",
                                           color=0xf15f5f)
@@ -399,9 +458,7 @@ async def on_message(message):
                     else:
                         if remember["A" + str(msg.content)].value != "-":
                             embed = discord.Embed(title="\n지휘관님이 원하시는대로 잊어버렸답니다",
-                                                  description="잊은 내용```\n질문 : \"%s\"\n대답 : \"%s\"```" % (
-                                                  remember["A" + str(msg.content)].value,
-                                                  remember["B" + str(msg.content)].value),
+                                                  description="잊은 내용```\n질문 : \"%s\"\n대답 : \"%s\"```" % (remember["A" + str(msg.content)].value, remember["B" + str(msg.content)].value),
                                                   color=0xf15f5f)
                             embed.set_thumbnail(
                                 url="https://images2.imgbox.com/a5/cd/nXI2XWKF_o.png")
@@ -434,8 +491,7 @@ async def on_message(message):
                             await channel.send(embed=embed)
 
                             def rcp(m):
-                                return m.channel == channel and (
-                                            m.content == '가위' or m.content == '바위' or m.content == '보') and m.author == m.author
+                                return m.channel == channel and (m.content == '가위' or m.content == '바위' or m.content == '보') and m.author == m.author
 
                             try:
                                 msg = await client.wait_for('message', timeout=10.0, check=rcp)
@@ -449,20 +505,17 @@ async def on_message(message):
                             else:
                                 rand = random.randint(0, 2)
                                 rcpname = "가위 바위 보".split(' ')
-                                await channel.send("```[ %s ]지휘관님은 [ %s ] 를 내셨네요.\n아카기는 무엇이냐면요,\n\n**%s 랍니다!**```" % (
-                                msg.author, msg.content, rcpname[rand]))
+                                await channel.send("```[ %s ]지휘관님은 [ %s ] 를 내셨네요.\n아카기는 무엇이냐면요,\n\n**%s 랍니다!**```" % (msg.author, msg.content, rcpname[rand]))
                                 if msg.content == "가위":
                                     if rand == 0:
                                         await channel.send("```어머, 비겼네요. 이렇게 마음이 맞는걸 보면 역시, 아카기와 지휘관님은 맺어질 운명이에요...```")
                                     elif rand == 1:
                                         await channel.send("```후후, 아카기가 이겼네요. 아카기가 이겼으니까 지휘관님의 모든 것은 제 것이에요~♥```")
                                     else:
-                                        await channel.send(
-                                            "```지휘관님이 이기셨으니 상품을 드릴게요. 상품은 바로, 아.카.기 랍니다? 이 아카기의 모든 것 소중히 여겨주세요```")
+                                        await channel.send("```지휘관님이 이기셨으니 상품을 드릴게요. 상품은 바로, 아.카.기 랍니다? 이 아카기의 모든 것 소중히 여겨주세요```")
                                 elif msg.content == '바위':
                                     if rand == 0:
-                                        await channel.send(
-                                            "```지휘관님이 이기셨으니 상품을 드릴게요. 상품은 바로, 아.카.기 랍니다? 이 아카기의 모든 것 소중히 여겨주세요```")
+                                        await channel.send("```지휘관님이 이기셨으니 상품을 드릴게요. 상품은 바로, 아.카.기 랍니다? 이 아카기의 모든 것 소중히 여겨주세요```")
                                     elif rand == 1:
                                         await channel.send("```어머, 비겼네요. 이렇게 마음이 맞는걸 보면 역시, 아카기와 지휘관님은 맺어질 운명이에요...```")
                                     else:
@@ -471,15 +524,12 @@ async def on_message(message):
                                     if rand == 0:
                                         await channel.send("```후후, 아카기가 이겼네요. 아카기가 이겼으니까 지휘관님의 모든 것은 제 것이에요~♥```")
                                     elif rand == 1:
-                                        await channel.send(
-                                            "```지휘관님이 이기셨으니 상품을 드릴게요. 상품은 바로, 아.카.기 랍니다? 이 아카기의 모든 것 소중히 여겨주세요```")
+                                        await channel.send("```지휘관님이 이기셨으니 상품을 드릴게요. 상품은 바로, 아.카.기 랍니다? 이 아카기의 모든 것 소중히 여겨주세요```")
                                     else:
                                         await channel.send("```어머, 비겼네요. 이렇게 마음이 맞는걸 보면 역시, 아카기와 지휘관님은 맺어질 운명이에요...```")
                             break
                         else:
-                            await channel.send("```[%s] 지휘관님, 아직 재사용 대기시간이 %d초 남았어요.```" % ((message.author), (
-                                        datetime.datetime.strptime(sheet["B" + str(i)].value,
-                                                                   '%Y%m%d%H%M%S') - datetime.datetime.now()).seconds))
+                            await channel.send("```[%s] 지휘관님, 아직 재사용 대기시간이 %d초 남았어요.```" % (message.author, (datetime.datetime.strptime(sheet["B" + str(i)].value, '%Y%m%d%H%M%S') - datetime.datetime.now()).seconds))
                             break
                     if sheet["A" + str(i)].value == "-":
                         sheet["A" + str(i)] = message.author.id
@@ -509,8 +559,7 @@ async def on_message(message):
                         else:
                             rand = random.randint(0, 2)
                             rcpname = "가위 바위 보".split(' ')
-                            await channel.send("```[ %s ]지휘관님은 [ %s ] 를 내셨네요.\n아카기는 무엇이냐면요,\n\n**%s 랍니다!**```" % (
-                                msg.author, msg.content, rcpname[rand]))
+                            await channel.send("```[ %s ]지휘관님은 [ %s ] 를 내셨네요.\n아카기는 무엇이냐면요,\n\n**%s 랍니다!**```" % (msg.author, msg.content, rcpname[rand]))
                             if msg.content == "가위":
                                 if rand == 0:
                                     await channel.send("```어머, 비겼네요. 이렇게 마음이 맞는걸 보면 역시, 아카기와 지휘관님은 맺어질 운명이에요...```")
@@ -537,11 +586,21 @@ async def on_message(message):
                                     await channel.send("```어머, 비겼네요. 이렇게 마음이 맞는걸 보면 역시, 아카기와 지휘관님은 맺어질 운명이에요...```")
                         break
 
+            elif cmdline[1] == "통아저씨":
+                if str(channel) == "통아저씨":
+                    embedtong = discord.Embed(title="원하는 만큼 클릭하세요",
+                                              description="칼 꽂기 : :dagger: \n중지버튼 : :stop_button: \n 언제 걸릴지는 랜덤입니다.",
+                                              color=0xf15f5f)
+                    embedtong.set_image(
+                        url="https://images2.imgbox.com/3c/5c/Y5qAM09P_o.png")
+                    await channel.send(embed=embedtong)
+                else:
+                    await channel.send("후후...지휘관님, 이 기능은 #통아저씨 채널에서만 사용이 가능하답니다.")
+
             elif cmdline[1] == "서약":
-                embed = discord.Embed(
-                    title="아카기, 이날만을 기다렸어요.\n후후훗...... 앞으로는 누구든 간에 지휘관님과 아카기를 떨어뜨릴 수 없어.\n저의 모든 것이 지휘관님의 것, 지휘관님의 모든 것은 저의 것이에요..... 후훗, 후후훗, 우후후후후후훗......",
-                    description="\n",
-                    color=0xf15f5f)
+                embed = discord.Embed(title="아카기, 이날만을 기다렸어요.\n후후훗...... 앞으로는 누구든 간에 지휘관님과 아카기를 떨어뜨릴 수 없어.\n저의 모든 것이 지휘관님의 것, 지휘관님의 모든 것은 저의 것이에요..... 후훗, 후후훗, 우후후후후후훗......",
+                                      description="\n",
+                                      color=0xf15f5f)
                 embed.set_image(
                     url="https://mblogthumb-phinf.pstatic.net/MjAxODA1MjNfMTQy/MDAxNTI3MDYzOTUxMDgy.WjbntAVv-ZJ_M4-7l_F5yDWu56LpUMtZs-Fwfwcy5sUg.owTwDTBHq6KO-feCwYNLJNw_wPV7v1fvDWfoztzxiscg.JPEG.hcnhd/Screenshot_20180523-171244.jpg?type=w800")
                 await channel.send(embed=embed)
@@ -562,8 +621,7 @@ async def on_message(message):
                     else:
                         break
                 rand = random.randint(1, randlen)
-                embed.add_field(name="%s" % sheet["A" + str(rand)].value, value="%s" % sheet["B" + str(rand)].value,
-                                inline=False)
+                embed.add_field(name="%s" % sheet["A" + str(rand)].value, value="%s" % sheet["B" + str(rand)].value, inline=False)
                 await channel.send(embed=embed)
             else:
                 await channel.send("지휘관님이 무엇을 말하시려 했는지는 모르겠지만, 지휘관님은 아카기와 영원히 함께랍니다~♥")
