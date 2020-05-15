@@ -18,64 +18,6 @@ async def on_ready():
     game = discord.Game("지휘관 감시")
     await client.change_presence(status=discord.Status.online, activity=game)
 
-
-@client.event
-async def on_reaction_add(reaction, user):
-    channel = reaction.message.channel
-
-    if str(channel) == "통아저씨" and str(reaction.message.author.id) == str(client.user.id) != str(user.id):
-        if str(reaction.emoji) == '🗡️':
-            if len(reaction.message.embeds) >= 1:
-                if reaction.message.embeds[0].title == "원하는 만큼 클릭하세요":
-                    rand = random.randint(1, 20)
-                    print(rand)
-                    if rand == 1:
-                        await reaction.message.edit(content=user.mention, allowed_mention="true")
-                        embedtong = discord.Embed(title="안타깝게도 알바코어가 힘차게 발사되었습니다.",
-                                                  description="당첨자 : %s \n다시 시작하기 : ▶️" % user.name,
-                                                  color=0xf15f5f)
-                        embedtong.set_image(
-                            url="https://images2.imgbox.com/75/14/Z0xw71mT_o.png")
-                        await reaction.message.edit(embed=embedtong)
-                        await reaction.message.clear_reactions()
-                        await reaction.message.add_reaction('▶️')
-                    else:
-                        embedtong = discord.Embed(title="원하는 만큼 클릭하세요",
-                                                  description="칼 꽂기 : :dagger: \n중지버튼 : :stop_button: \n 언제 걸릴지는 랜덤입니다.",
-                                                  color=0xf15f5f)
-                        embedtong.add_field(name="방금 눌른 사람", value=user.mention, inline=False)
-                        embedtong.set_image(
-                            url="https://images2.imgbox.com/3c/5c/Y5qAM09P_o.png")
-                        await reaction.message.edit(embed=embedtong)
-                        await reaction.message.remove_reaction('🗡️', member=user)
-        if str(reaction.emoji) == '▶️':
-            if len(reaction.message.embeds) >= 1:
-                if reaction.message.embeds[0].title == "게임이 중단되어 알바코어가 안도합니다." or reaction.message.embeds[0].title == "안타깝게도 알바코어가 힘차게 발사되었습니다.":
-                    await reaction.message.edit(content="@%s" % user.name)
-                    embedtong = discord.Embed(title="원하는 만큼 클릭하세요",
-                                              description="칼 꽂기 : :dagger: \n중지버튼 : :stop_button: \n 언제 걸릴지는 랜덤입니다.",
-                                              color=0xf15f5f)
-                    embedtong.add_field(name="시작한 사람", value="@%s" % user.name, inline=False)
-                    embedtong.set_image(
-                        url="https://images2.imgbox.com/3c/5c/Y5qAM09P_o.png")
-                    await reaction.message.edit(embed=embedtong)
-                    await reaction.message.clear_reactions()
-                    await reaction.message.add_reaction('🗡️')
-                    await reaction.message.add_reaction('⏹️')
-        if str(reaction.emoji) == '⏹️':
-            if len(reaction.message.embeds) >= 1:
-                if reaction.message.embeds[0].title == "원하는 만큼 클릭하세요":
-                    await reaction.message.edit(content=user.mention, allowed_mention="true")
-                    embedtong = discord.Embed(title="게임이 중단되어 알바코어가 안도합니다.",
-                                              description="중지자 : %s \n다시 시작하기 : ▶️" % user.name,
-                                              color=0xf15f5f)
-                    embedtong.set_image(
-                        url="https://images2.imgbox.com/e8/cb/DL8EsYZQ_o.png")
-                    await reaction.message.edit(embed=embedtong)
-                    await reaction.message.clear_reactions()
-                    await reaction.message.add_reaction('▶️')
-
-
 @client.event
 async def on_message(message):
     def asking(m):
@@ -85,12 +27,6 @@ async def on_message(message):
     channel = message.channel
 
     if message.author.bot:  # 봇은 기본적으로는 무시
-        channel = message.channel
-        if str(channel) == "통아저씨" and str(message.author.id) == str(client.user.id):
-            if len(message.embeds) >= 1:
-                if message.embeds[0].title == "원하는 만큼 클릭하세요":
-                    await message.add_reaction('🗡️')
-                    await message.add_reaction('⏹️')
         return None
 
     # and str(channel) == "아카기봇채널"
@@ -585,17 +521,6 @@ async def on_message(message):
                                 else:
                                     await channel.send("```어머, 비겼네요. 이렇게 마음이 맞는걸 보면 역시, 아카기와 지휘관님은 맺어질 운명이에요...```")
                         break
-
-            elif cmdline[1] == "통아저씨":
-                if str(channel) == "통아저씨":
-                    embedtong = discord.Embed(title="원하는 만큼 클릭하세요",
-                                              description="칼 꽂기 : :dagger: \n중지버튼 : :stop_button: \n 언제 걸릴지는 랜덤입니다.",
-                                              color=0xf15f5f)
-                    embedtong.set_image(
-                        url="https://images2.imgbox.com/3c/5c/Y5qAM09P_o.png")
-                    await channel.send(embed=embedtong)
-                else:
-                    await channel.send("후후...지휘관님, 이 기능은 #통아저씨 채널에서만 사용이 가능하답니다.")
 
             elif cmdline[1] == "서약":
                 embed = discord.Embed(title="아카기, 이날만을 기다렸어요.\n후후훗...... 앞으로는 누구든 간에 지휘관님과 아카기를 떨어뜨릴 수 없어.\n저의 모든 것이 지휘관님의 것, 지휘관님의 모든 것은 저의 것이에요..... 후훗, 후후훗, 우후후후후후훗......",
